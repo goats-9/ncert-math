@@ -1,26 +1,27 @@
 #!/bin/bash
 
 #Array of names
-zipname=("iemh1dd" "jemh1dd" "kemh1dd" "lemh1dd" "lemh2dd")
-classname=("9" "10" "11" "12-1" "12-2")
-len=${#zipname[@]}
+filename=("iemh1" "jemh1" "kemh1" "lemh1" "lemh2")
+foldername=("math/9" "math/10" "math/11" "math/12-1" "math/12-2")
+len=${#filename[@]}
 
-#Download, unzip and create the folder
+#Download the pdf
 for (( i = 0; i < $len; i++ )); do
-    z="${zipname[i]}.zip"
-    f=${classname[i]}
-    if [[ -e $z ]]; then
-        rm $z
+    fold=${foldername[i]}
+    if [[ -d $fold ]]; then
+        rm -rf $fold
     fi
-    if [[ -d $f ]]; then
-        rm -rf $f
-    fi
-    echo "Downloading files for class $f"
-    wget https://ncert.nic.in/textbook/pdf/$z
-    mkdir $f
-    echo "Unzipping files"
-    unzip -q $z -d $f
-    rm $z
+    mkdir -p $fold
+    echo "Downloading files to $fold"
+    #Download the pdfs
+    for j in $(seq -f "%02g" 1 99); do
+        file="${filename[i]}$j.pdf"
+        wget https://ncert.nic.in/textbook/pdf/${file} -O "${fold}/${file}"
+        #Break at Error
+        if [[ $? -ne 0 ]]; then
+            break
+        fi
+    done
     echo "OK"
     echo ""
     echo "-----------------------------"
