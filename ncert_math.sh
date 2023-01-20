@@ -15,8 +15,15 @@ for (( i = 0; i < $len; i++ )); do
     if [[ -d $f ]]; then
         rm -rf $f
     fi
+    echo "Downloading files for class $f"
     wget https://ncert.nic.in/textbook/pdf/$z
     mkdir $f
-    unzip $z -d $f
+    echo "Unzipping files"
+    unzip -q $z -d $f
     rm $z
+    echo "OK"
+    echo ""
+    echo "-----------------------------"
+    echo ""
 done
+echo "DONE"
